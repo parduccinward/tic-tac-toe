@@ -13,3 +13,27 @@
 // Decide how and what happens when game starts
 // Decide how and what happens when game ends
 // Decide how and what happens when game restart
+
+const gameboard = ( () => {
+    let moves = ["","","","","","","","",""];
+    const renderLayout =  () => {
+        let gameboardContainer = document.querySelector(".gameboard-container");
+        for(let i = 1; i < 10; i++){
+            let square = document.createElement("div");
+            square.addEventListener("click", () => {
+                game.determineWhoPlays();
+            })
+            square.id = i;
+            square.setAttribute("class","square");
+            gameboardContainer.appendChild(square);
+        }
+    };
+    const countGameboardPlays = () => {
+        let gameboardPlays = 0;
+        moves.forEach(move => {
+            if(move==="X" || move==="O") gameboardPlays++;
+        });
+        return gameboardPlays;
+    }
+    return { moves, renderLayout, countGameboardPlays };
+})();
