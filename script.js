@@ -43,3 +43,22 @@ const Player = (name) => {
     const makeAMove = () => console.log("Mark added");
     return { makeAMove, getName };
 }
+
+const Game = () => {
+    const startGame = () => {
+        gameboard.renderLayout();
+    };
+    const determineWhoPlays = () =>{
+        const gameboardPlays = gameboard.countGameboardPlays();
+        if(gameboardPlays===9){
+            console.log("Determining winner");
+        }else if (gameboardPlays%2===0){
+            console.log(playerOne.getName());
+        }else{
+            console.log(playerTwo.getName());
+        }
+    };
+    const checkGame = () => console.log("Checking game");
+    const restartGame = () => console.log("Restarting game");
+    return { startGame, determineWhoPlays, checkGame, restartGame };
+}
