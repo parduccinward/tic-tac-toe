@@ -37,3 +37,9 @@ const gameboard = ( () => {
     }
     return { moves, renderLayout, countGameboardPlays };
 })();
+
+const Player = (name) => {
+    const getName = () => name;
+    const makeAMove = () => console.log("Mark added");
+    return { makeAMove, getName };
+}
