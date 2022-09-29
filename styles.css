@@ -1,0 +1,25 @@
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.gameboard-container{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    width:800px;
+    height: 800px;
+}
+
+div#\31, div#\32, div#\34, div#\35 {
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+}
+
+div#\33, div#\36{
+    border-bottom: 2px solid black;
+}
+
+div#\37, div#\38{
+    border-right: 2px solid black;
+}
