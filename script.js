@@ -62,3 +62,8 @@ const Game = () => {
     const restartGame = () => console.log("Restarting game");
     return { startGame, determineWhoPlays, checkGame, restartGame };
 }
+
+var playerOne = Player("Diego");
+var playerTwo = Player("Jose");
+var game = Game(playerOne, playerTwo);
+game.startGame();
