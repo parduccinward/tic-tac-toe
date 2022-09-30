@@ -1,4 +1,16 @@
+@font-face {
+    font-family: 'exco_shadow';
+    src: url('fonts/exco-shadow.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body{
+    background-color: #6F8FAF;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    font-family: exco_shadow, sans-serif;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -12,14 +24,22 @@ body{
 }
 
 div#\31, div#\32, div#\34, div#\35 {
-    border-bottom: 2px solid black;
-    border-right: 2px solid black;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
 }
 
 div#\33, div#\36{
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid #fff;
 }
 
 div#\37, div#\38{
-    border-right: 2px solid black;
+    border-right: 2px solid #fff;
+}
+
+.square{
+    color:#ffff;
+    font-size: 11rem;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
