@@ -40,7 +40,15 @@ const gameboard = ( () => {
         });
         return gameboardPlays;
     }
-    return { moves, renderLayout, countGameboardPlays };
+
+    const popWinnerMessage = (player) => {
+        var modal = document.getElementById("winner-message");
+        var p = document.querySelector(".winner-text")
+        p.textContent = "The winner is "+player.getName()+"!! Congratulations!";
+        modal.style.display = "block";
+    }
+
+    return { moves, renderLayout, countGameboardPlays, popWinnerMessage};
 })();
 
 const Player = (name, mark) => {
@@ -64,11 +72,12 @@ const Game = () => {
             return playerTwo;
         }
     };
+
     const checkWinner = (player) => {
 
-        if(checkHorizontalLines())console.log(player.getName());
-        if(checkVerticalLines())console.log(player.getName());
-        if(checkDiagonalLines())console.log(player.getName());
+        if(checkHorizontalLines())gameboard.popWinnerMessage(player);
+        if(checkVerticalLines())gameboard.popWinnerMessage(player);
+        if(checkDiagonalLines())gameboard.popWinnerMessage(player);
 
         function checkDiagonalLines() {
             return((gameboard.moves[0]===player.getMark() && gameboard.moves[4]===player.getMark() && gameboard.moves[8]===player.getMark())||(gameboard.moves[2]===player.getMark() && gameboard.moves[4]===player.getMark() && gameboard.moves[6]===player.getMark()))?true:false;
@@ -87,10 +96,6 @@ const Game = () => {
                     }
                 }
             }
-            if(verticalLines[0]===6 || verticalLines[1]===6 || verticalLines[2]===6){
-                console.log("vertical");
-                console.log(verticalLines);
-            }
             return (verticalLines[0]===6 || verticalLines[1]===6 || verticalLines[2]===6)? true:false;
         }
 
@@ -104,10 +109,6 @@ const Game = () => {
                 }else if(i>=7 && gameboard.moves[i-1]===player.getMark()){
                     horizontalLines[2]+=i-6;
                 }
-            }
-            if(horizontalLines[0]===6 || horizontalLines[1]===6 || horizontalLines[2]===6){
-                console.log("horizontal");
-                console.log(horizontalLines);
             }
             return (horizontalLines[0]===6 || horizontalLines[1]===6 || horizontalLines[2]===6)? true:false;
         }
