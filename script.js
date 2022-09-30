@@ -18,10 +18,15 @@ const gameboard = ( () => {
     let moves = ["","","","","","","","",""];
     const renderLayout =  () => {
         let gameboardContainer = document.querySelector(".gameboard-container");
-        for(let i = 1; i < 10; i++){
+        for(let i = 1; i < gameboard.moves.length+1; i++){
             let square = document.createElement("div");
             square.addEventListener("click", () => {
-                game.determineWhoPlays();
+                let player = game.determineWhoPlays();
+                if(moves[i-1]===""){
+                    square.textContent = player.getMark();
+                    moves[i-1]=player.getMark();
+                    game.checkWinner(player);
+                }
             })
             square.id = i;
             square.setAttribute("class","square");
@@ -38,10 +43,11 @@ const gameboard = ( () => {
     return { moves, renderLayout, countGameboardPlays };
 })();
 
-const Player = (name) => {
+const Player = (name, mark) => {
     const getName = () => name;
+    const getMark = () => mark;
     const makeAMove = () => console.log("Mark added");
-    return { makeAMove, getName };
+    return { makeAMove, getName, getMark };
 }
 
 const Game = () => {
@@ -53,17 +59,64 @@ const Game = () => {
         if(gameboardPlays===9){
             console.log("Determining winner");
         }else if (gameboardPlays%2===0){
-            console.log(playerOne.getName());
+            return playerOne;
         }else{
-            console.log(playerTwo.getName());
+            return playerTwo;
         }
     };
-    const checkGame = () => console.log("Checking game");
+    const checkWinner = (player) => {
+
+        if(checkHorizontalLines())console.log(player.getName());
+        if(checkVerticalLines())console.log(player.getName());
+        if(checkDiagonalLines())console.log(player.getName());
+
+        function checkDiagonalLines() {
+            return((gameboard.moves[0]===player.getMark() && gameboard.moves[4]===player.getMark() && gameboard.moves[8]===player.getMark())||(gameboard.moves[2]===player.getMark() && gameboard.moves[4]===player.getMark() && gameboard.moves[6]===player.getMark()))?true:false;
+        }
+
+        function checkVerticalLines(){
+            let verticalLines = [0,0,0];
+            for(let i = 1; i<4;i++){
+                for(let j = 0; j<9;j+=3){
+                    if(i===1 && gameboard.moves[(i-1)+j]===player.getMark()){
+                        verticalLines[0]+=(j/3)+1;
+                    }else if (i===2 && gameboard.moves[(i-1)+j]===player.getMark()){
+                        verticalLines[1]+=(j/3)+1;
+                    }else if (i===3 && gameboard.moves[(i-1)+j]===player.getMark()){
+                        verticalLines[2]+=(j/3)+1;
+                    }
+                }
+            }
+            if(verticalLines[0]===6 || verticalLines[1]===6 || verticalLines[2]===6){
+                console.log("vertical");
+                console.log(verticalLines);
+            }
+            return (verticalLines[0]===6 || verticalLines[1]===6 || verticalLines[2]===6)? true:false;
+        }
+
+        function checkHorizontalLines(){
+            let horizontalLines = [0,0,0];
+            for(let i = 1; i<gameboard.moves.length+1;i++){
+                if(i<4 && gameboard.moves[i-1]===player.getMark()){
+                    horizontalLines[0]+=i;
+                }else if(i>=4 && i<7 && gameboard.moves[i-1]===player.getMark()){
+                    horizontalLines[1]+=i-3;
+                }else if(i>=7 && gameboard.moves[i-1]===player.getMark()){
+                    horizontalLines[2]+=i-6;
+                }
+            }
+            if(horizontalLines[0]===6 || horizontalLines[1]===6 || horizontalLines[2]===6){
+                console.log("horizontal");
+                console.log(horizontalLines);
+            }
+            return (horizontalLines[0]===6 || horizontalLines[1]===6 || horizontalLines[2]===6)? true:false;
+        }
+    }
     const restartGame = () => console.log("Restarting game");
-    return { startGame, determineWhoPlays, checkGame, restartGame };
+    return { startGame, determineWhoPlays, checkWinner, restartGame };
 }
 
-var playerOne = Player("Diego");
-var playerTwo = Player("Jose");
+var playerOne = Player("Diego","X");
+var playerTwo = Player("Jose","O");
 var game = Game(playerOne, playerTwo);
 game.startGame();
