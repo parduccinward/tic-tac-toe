@@ -1,24 +1,9 @@
-// Use a module to objects that you need only once.
-// And factories for objects that you need more than once
-
-// 1. Gameboard object
-// 1.1. Function to render array to webpage (check)
-// 2. Player object
-// 2.1. Function to add a mark to a specific spot (check)
-// 3. Game object
-// 3.1. Function that checks when game is over (3-row or tie) (check)
-// 3.2. Function to restart game (check)
-// 3.2.1. Create new player 1 and 2 (with names)
-
-// Decide how and what happens when game starts
-// Decide how and what happens when game ends
-// Decide how and what happens when game restart
-
 const gameboard = ( () => {
     let moves = ["","","","","","","","",""];
+    const getMoves = () => moves;
     const renderLayout =  () => {
         let gameboardContainer = document.querySelector(".gameboard-container");
-        for(let i = 1; i < gameboard.moves.length+1; i++){
+        for(let i = 1; i < moves.length+1; i++){
             let square = document.createElement("div");
             square.addEventListener("click", () => {
                 let player = game.determineWhoPlays();
@@ -62,7 +47,19 @@ const gameboard = ( () => {
         });
     }
 
-    return { moves, renderLayout, deleteLayout, countGameboardPlays, popWinnerMessage};
+    const popDrawMessage = () => {
+        const modal = document.getElementById("winner-message");
+        const p = document.querySelector(".winner-text")
+        p.textContent = "The game it's a DRAW";
+        modal.style.display = "block";
+        const restartBtn = document.querySelector(".restart-button")
+        restartBtn.addEventListener('click', () => {
+            modal.style.display = "none";
+            game.restartGame();
+        });
+    }
+
+    return { renderLayout, deleteLayout, countGameboardPlays, popWinnerMessage, popDrawMessage, getMoves};
 })();
 
 const Player = (name, mark) => {
@@ -85,9 +82,7 @@ const Game = () => {
 
     const determineWhoPlays = () =>{
         const gameboardPlays = gameboard.countGameboardPlays();
-        if(gameboardPlays===9){
-            console.log("Determining winner");
-        }else if (gameboardPlays%2===0){
+        if (gameboardPlays%2===0){
             return players.playerOne;
         }else{
             return players.playerTwo;
@@ -95,24 +90,27 @@ const Game = () => {
     };
 
     const checkWinner = (player) => {
-
+        const gameboardPlays = gameboard.countGameboardPlays();
+        if(gameboardPlays===9){
+            gameboard.popDrawMessage();
+        }
         if(checkHorizontalLines())gameboard.popWinnerMessage(player);
         if(checkVerticalLines())gameboard.popWinnerMessage(player);
         if(checkDiagonalLines())gameboard.popWinnerMessage(player);
 
         function checkDiagonalLines() {
-            return((gameboard.moves[0]===player.getMark() && gameboard.moves[4]===player.getMark() && gameboard.moves[8]===player.getMark())||(gameboard.moves[2]===player.getMark() && gameboard.moves[4]===player.getMark() && gameboard.moves[6]===player.getMark()))?true:false;
+            return((gameboard.getMoves()[0]===player.getMark() && gameboard.getMoves()[4]===player.getMark() && gameboard.getMoves()[8]===player.getMark())||(gameboard.getMoves()[2]===player.getMark() && gameboard.getMoves()[4]===player.getMark() && gameboard.getMoves()[6]===player.getMark()))?true:false;
         }
 
         function checkVerticalLines(){
             let verticalLines = [0,0,0];
             for(let i = 1; i<4;i++){
                 for(let j = 0; j<9;j+=3){
-                    if(i===1 && gameboard.moves[(i-1)+j]===player.getMark()){
+                    if(i===1 && gameboard.getMoves()[(i-1)+j]===player.getMark()){
                         verticalLines[0]+=(j/3)+1;
-                    }else if (i===2 && gameboard.moves[(i-1)+j]===player.getMark()){
+                    }else if (i===2 && gameboard.getMoves()[(i-1)+j]===player.getMark()){
                         verticalLines[1]+=(j/3)+1;
-                    }else if (i===3 && gameboard.moves[(i-1)+j]===player.getMark()){
+                    }else if (i===3 && gameboard.getMoves()[(i-1)+j]===player.getMark()){
                         verticalLines[2]+=(j/3)+1;
                     }
                 }
@@ -122,12 +120,12 @@ const Game = () => {
 
         function checkHorizontalLines(){
             let horizontalLines = [0,0,0];
-            for(let i = 1; i<gameboard.moves.length+1;i++){
-                if(i<4 && gameboard.moves[i-1]===player.getMark()){
+            for(let i = 1; i<gameboard.getMoves().length+1;i++){
+                if(i<4 && gameboard.getMoves()[i-1]===player.getMark()){
                     horizontalLines[0]+=i;
-                }else if(i>=4 && i<7 && gameboard.moves[i-1]===player.getMark()){
+                }else if(i>=4 && i<7 && gameboard.getMoves()[i-1]===player.getMark()){
                     horizontalLines[1]+=i-3;
-                }else if(i>=7 && gameboard.moves[i-1]===player.getMark()){
+                }else if(i>=7 && gameboard.getMoves()[i-1]===player.getMark()){
                     horizontalLines[2]+=i-6;
                 }
             }
@@ -135,7 +133,8 @@ const Game = () => {
         }
     }
     const restartGame = () => {
-        window.location.reload();
+        gameboard.deleteLayout();
+        game.startGame();
     }
     return { startGame, createNewPlayers, determineWhoPlays, checkWinner, restartGame };
 }
