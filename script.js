@@ -33,6 +33,15 @@ const gameboard = ( () => {
             gameboardContainer.appendChild(square);
         }
     };
+
+    const deleteLayout = () => {
+        moves = ["","","","","","","","",""];
+        let gameboardContainer = document.querySelector(".gameboard-container");
+        while (gameboardContainer.lastElementChild) {
+            gameboardContainer.removeChild(gameboardContainer.lastElementChild);
+        }
+    }
+
     const countGameboardPlays = () => {
         let gameboardPlays = 0;
         moves.forEach(move => {
@@ -48,11 +57,12 @@ const gameboard = ( () => {
         modal.style.display = "block";
         const restartBtn = document.querySelector(".restart-button")
         restartBtn.addEventListener('click', () => {
+            modal.style.display = "none";
             game.restartGame();
         });
     }
 
-    return { moves, renderLayout, countGameboardPlays, popWinnerMessage};
+    return { moves, renderLayout, deleteLayout, countGameboardPlays, popWinnerMessage};
 })();
 
 const Player = (name, mark) => {
@@ -66,14 +76,21 @@ const Game = () => {
     const startGame = () => {
         gameboard.renderLayout();
     };
+
+    const createNewPlayers = () =>{
+        const playerOne = Player("Diego","X");
+        const playerTwo = Player("Jose","O");
+        return { playerOne, playerTwo}
+    }
+
     const determineWhoPlays = () =>{
         const gameboardPlays = gameboard.countGameboardPlays();
         if(gameboardPlays===9){
             console.log("Determining winner");
         }else if (gameboardPlays%2===0){
-            return playerOne;
+            return players.playerOne;
         }else{
-            return playerTwo;
+            return players.playerTwo;
         }
     };
 
@@ -117,11 +134,12 @@ const Game = () => {
             return (horizontalLines[0]===6 || horizontalLines[1]===6 || horizontalLines[2]===6)? true:false;
         }
     }
-    const restartGame = () => console.log("Restarting game");
-    return { startGame, determineWhoPlays, checkWinner, restartGame };
+    const restartGame = () => {
+        window.location.reload();
+    }
+    return { startGame, createNewPlayers, determineWhoPlays, checkWinner, restartGame };
 }
 
-var playerOne = Player("Diego","X");
-var playerTwo = Player("Jose","O");
-var game = Game(playerOne, playerTwo);
+var game = Game();
+var players = game.createNewPlayers();
 game.startGame();
