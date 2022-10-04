@@ -75,8 +75,8 @@ const Game = () => {
     };
 
     const createNewPlayers = () =>{
-        const playerOne = Player("Diego","X");
-        const playerTwo = Player("Jose","O");
+        const playerOne = Player(prompt("Select player 1 name:"),"X");
+        const playerTwo = Player(prompt("Select player 2 name:"),"O");
         return { playerOne, playerTwo}
     }
 
