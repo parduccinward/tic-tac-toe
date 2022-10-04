@@ -23,7 +23,7 @@ const gameboard = ( () => {
             square.addEventListener("click", () => {
                 let player = game.determineWhoPlays();
                 if(moves[i-1]===""){
-                    square.textContent = player.getMark();
+                    player.makeAMove(square,player);
                     moves[i-1]=player.getMark();
                     game.checkWinner(player);
                 }
@@ -42,10 +42,14 @@ const gameboard = ( () => {
     }
 
     const popWinnerMessage = (player) => {
-        var modal = document.getElementById("winner-message");
-        var p = document.querySelector(".winner-text")
+        const modal = document.getElementById("winner-message");
+        const p = document.querySelector(".winner-text")
         p.textContent = "The winner is "+player.getName()+"!! Congratulations!";
         modal.style.display = "block";
+        const restartBtn = document.querySelector(".restart-button")
+        restartBtn.addEventListener('click', () => {
+            game.restartGame();
+        });
     }
 
     return { moves, renderLayout, countGameboardPlays, popWinnerMessage};
@@ -54,7 +58,7 @@ const gameboard = ( () => {
 const Player = (name, mark) => {
     const getName = () => name;
     const getMark = () => mark;
-    const makeAMove = () => console.log("Mark added");
+    const makeAMove = (square,player) => square.textContent = player.getMark();
     return { makeAMove, getName, getMark };
 }
 
